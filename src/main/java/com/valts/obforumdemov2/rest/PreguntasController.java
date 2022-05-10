@@ -2,10 +2,13 @@ package com.valts.obforumdemov2.rest;
 
 import com.valts.obforumdemov2.dto.PreguntaDTO;
 import com.valts.obforumdemov2.dto.PreguntaUserVoteDTO;
+import com.valts.obforumdemov2.exceptions.IncorrectUserException;
 import com.valts.obforumdemov2.models.Pregunta;
+import com.valts.obforumdemov2.models.User;
 import com.valts.obforumdemov2.services.implementations.PreguntaServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,46 +28,43 @@ public class PreguntasController {
     }
 
     @GetMapping("/foro/preguntas/{preguntaId}")
-    private ResponseEntity<PreguntaUserVoteDTO> getPreguntaById(@PathVariable Long preguntaId) {
-        //    TODO: Get User Id from security context
-        Long userId = 3L;
-        PreguntaUserVoteDTO pregunta = preguntaService.findById(preguntaId, userId);
+    private ResponseEntity<PreguntaUserVoteDTO> getPreguntaById(@PathVariable Long preguntaId, Authentication authentication) {
+        User userDetails = (User) authentication.getPrincipal();
+
+        PreguntaUserVoteDTO pregunta = preguntaService.findById(preguntaId, userDetails.getId());
         if (pregunta == null) return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok(pregunta);
     }
 
-//    TODO: Get User Id from security context
     @PostMapping("/foro/preguntas")
-    private ResponseEntity<Pregunta> addPregunta(@RequestBody Pregunta pregunta) {
+    private ResponseEntity<Pregunta> addPregunta(@RequestBody Pregunta pregunta, Authentication authentication) {
         if(pregunta.getTemaId() == null) return ResponseEntity.badRequest().build();
 
-        Long dummyUserId = 1L;
-        Pregunta savedPregunta = preguntaService.save(pregunta, dummyUserId);
+        User userDetails = (User) authentication.getPrincipal();
+        Pregunta savedPregunta = preguntaService.save(pregunta, userDetails.getId());
         if (savedPregunta == null) return ResponseEntity.badRequest().build();
 
         return ResponseEntity.ok(savedPregunta);
     }
 
-//    user who created + admin
     @PutMapping("/foro/preguntas")
-    private ResponseEntity<Pregunta> updatePregunta(@RequestBody Pregunta pregunta) {
+    private ResponseEntity<Pregunta> updatePregunta(@RequestBody Pregunta pregunta, Authentication authentication) throws IncorrectUserException {
         if (pregunta.getId() == null) return ResponseEntity.badRequest().build();
 
-//        TODO: Run check against user id match here
-        Pregunta updatedPregunta = preguntaService.update(pregunta);
+        Pregunta updatedPregunta = preguntaService.update(pregunta, (User) authentication.getPrincipal());
         if (updatedPregunta != null) return ResponseEntity.ok(updatedPregunta);
 
         return ResponseEntity.notFound().build();
     }
 
-//    user who created + admin
     @DeleteMapping("/foro/preguntas/{id}")
-    private ResponseEntity<Void> deletePregunta(@PathVariable Long id) {
-        boolean isDeleted = preguntaService.deleteOne(id);
+    private ResponseEntity<Void> deletePregunta(@PathVariable Long id, Authentication authentication) {
+        boolean isDeleted = preguntaService.deleteOne(id, (User) authentication.getPrincipal());
 
-        if (isDeleted) return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build();
+//        if (isDeleted) return ResponseEntity.noContent().build();
 
-        return ResponseEntity.notFound().build();
+//        return ResponseEntity.notFound().build();
     }
 }

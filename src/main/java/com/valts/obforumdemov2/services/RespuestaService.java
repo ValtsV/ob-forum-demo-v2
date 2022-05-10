@@ -2,6 +2,7 @@ package com.valts.obforumdemov2.services;
 
 import com.valts.obforumdemov2.dto.RespuestaDTO;
 import com.valts.obforumdemov2.models.Respuesta;
+import com.valts.obforumdemov2.models.User;
 
 import java.util.List;
 
@@ -10,8 +11,8 @@ public interface RespuestaService {
 
     List<RespuestaDTO> save(Respuesta respuesta, Long userId);
 
-    List<RespuestaDTO> update(Respuesta respuesta);
+    List<RespuestaDTO> update(Respuesta respuesta, User user);
 
-    List<RespuestaDTO> deleteOne(Long preguntaId, Long userId);
+    List<RespuestaDTO> deleteOne(Long preguntaId, User user);
 
 }

@@ -2,8 +2,11 @@ package com.valts.obforumdemov2.services.implementations;
 
 import com.valts.obforumdemov2.dto.PreguntaDTO;
 import com.valts.obforumdemov2.dto.PreguntaUserVoteDTO;
+import com.valts.obforumdemov2.exceptions.EntryNotFoundException;
+import com.valts.obforumdemov2.exceptions.IncorrectUserException;
 import com.valts.obforumdemov2.models.Pregunta;
 import com.valts.obforumdemov2.models.Tema;
+import com.valts.obforumdemov2.models.User;
 import com.valts.obforumdemov2.repositories.PreguntaRespository;
 import com.valts.obforumdemov2.repositories.TemaRepository;
 import com.valts.obforumdemov2.repositories.UserRepository;
@@ -45,7 +48,6 @@ public class PreguntaServiceImpl implements PreguntaService {
 
 //     Pregunta pregunta = preguntaService.save(pregunta);
 //    saves pregunta in db
-
     public Pregunta save(Pregunta pregunta, Long userId) {
         Optional<Tema> temaOptional = temaRepository.findById(pregunta.getTemaId());
         if (temaOptional.isEmpty()) return null;
@@ -58,14 +60,19 @@ public class PreguntaServiceImpl implements PreguntaService {
 
 //     Pregunta updatedPregunta = preguntaService.update(pregunta);
 //    updates pregunta
-    public Pregunta update(Pregunta pregunta) {
+    public Pregunta update(Pregunta pregunta, User currentUser) throws IncorrectUserException {
         Optional<Pregunta> preguntaOptional = preguntaRespository.findById(pregunta.getId());
         if(preguntaOptional.isEmpty()) return null;
 
+
         Pregunta preguntaToUpdate = preguntaOptional.get();
+        if (preguntaToUpdate.getUser().getId() != currentUser.getId() && !(currentUser.getRoles().contains("ADMIN"))) {
+            throw new IncorrectUserException("Not your post, buddy!");
+        }
+
         preguntaToUpdate.setTitle(pregunta.getTitle());
         preguntaToUpdate.setDescription(pregunta.getDescription());
-//        TODO: check admin privileges for setting ispinned
+
         preguntaToUpdate.setPinned(pregunta.isPinned());
         preguntaToUpdate.setUpdatedAt(LocalDateTime.now());
 
@@ -74,10 +81,14 @@ public class PreguntaServiceImpl implements PreguntaService {
 
 //      boolean isDeleted = preguntaService.deleteOne(id);
 //    deletes pregunta
-    public boolean deleteOne(Long id) {
-        boolean exists = preguntaRespository.existsById(id);
+    public boolean deleteOne(Long id, User currentUser) {
+        Optional<Pregunta> preguntaOptional = preguntaRespository.findById(id);
+        if(preguntaOptional.isEmpty()) throw new EntryNotFoundException("Question with this Id not found");
 
-        if(!exists) return false;
+        Pregunta pregunta = preguntaOptional.get();
+        if (pregunta.getUser().getId() != currentUser.getId() && !(currentUser.getRoles().contains("ADMIN"))) {
+            throw new IncorrectUserException("Not your post, buddy!");
+        }
 
         preguntaRespository.deleteById(id);
         return true;

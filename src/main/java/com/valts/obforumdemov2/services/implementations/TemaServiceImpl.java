@@ -28,23 +28,23 @@ public class TemaServiceImpl implements TemaService {
 
     /**
      * Finds and returns all temas(themes) filtered by curso ID(course ID) where user is enrolled in
-     * @param id course ID to filter themes
-     * TODO: add second param to filter by userID (after security implementation)
+     * @param cursoId course ID to filter themes
+     * @param userId current user ID to check which courses can access
      * @return Returns list of TemasDTO objects
      */
-    public List<TemaDTO> findByCursoId(Long id) {
-        return temaRepository.findAllByCursoIdUserAccessible(id, 3L);
+    public List<TemaDTO> findByCursoId(Long cursoId, Long userId) {
+        return temaRepository.findAllByCursoIdUserAccessible(cursoId, userId);
     }
 
     /**
      * Finds and returns all temas(themes) filtered by curso ID(course ID) and modulo ID(module ID) where user is enrolled in
      * @param cursoId course ID to filter themes
      * @param moduloId module ID to filter themes
-     * TODO: add second param to filter by userID (after security implementation)
+     * @param userId current user ID to check which courses can access
      * @return List of TemaDTO
      */
-    public List<TemaDTO> findByCursoIdAndModuloId(Long cursoId, Long moduloId) {
-        return temaRepository.findAllByCursoIdAndModuloIdUserAccessible(cursoId, moduloId, 3L);
+    public List<TemaDTO> findByCursoIdAndModuloId(Long cursoId, Long moduloId, Long userId) {
+        return temaRepository.findAllByCursoIdAndModuloIdUserAccessible(cursoId, moduloId, userId);
     }
 
     /**

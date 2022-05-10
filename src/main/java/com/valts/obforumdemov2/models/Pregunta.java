@@ -40,8 +40,10 @@ public class Pregunta {
     private User user;
 
     @OneToMany(mappedBy = "pregunta", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Respuesta> respuestas;
 
     @OneToMany(mappedBy = "pregunta", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<VotoPregunta> votos;
 }

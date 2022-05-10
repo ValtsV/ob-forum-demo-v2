@@ -6,9 +6,9 @@ import com.valts.obforumdemov2.models.Tema;
 import java.util.List;
 
 public interface TemaService {
-    List<TemaDTO> findByCursoId(Long id);
+    List<TemaDTO> findByCursoId(Long id, Long userId);
 
-    List<TemaDTO> findByCursoIdAndModuloId(Long cursoId, Long moduloId);
+    List<TemaDTO> findByCursoIdAndModuloId(Long cursoId, Long moduloId, Long userId);
 
     Tema findById(Long temaId);
 
