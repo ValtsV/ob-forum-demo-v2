@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -31,15 +33,15 @@ import javax.persistence.*;
 @SqlResultSetMapping(name = "Mapping.TemaDTO",
                     classes = {
                         @ConstructorResult(targetClass = TemaDTO.class,
-                                            columns = {
-                                                @ColumnResult(name = "id", type = Long.class),
-                                                @ColumnResult(name = "description"),
-                                                @ColumnResult(name = "is_pinned"),
-                                                @ColumnResult(name = "title"),
-                                                @ColumnResult(name = "curso_id", type = Long.class),
-                                                @ColumnResult(name = "modulo_id", type = Long.class),
-                                                    @ColumnResult(name = "preguntaCount", type = Long.class)
-                                            })
+                            columns = {
+                                @ColumnResult(name = "id", type = Long.class),
+                                @ColumnResult(name = "description"),
+                                @ColumnResult(name = "is_pinned"),
+                                @ColumnResult(name = "title"),
+                                @ColumnResult(name = "curso_id", type = Long.class),
+                                @ColumnResult(name = "modulo_id", type = Long.class),
+                                    @ColumnResult(name = "preguntaCount", type = Long.class)
+                            })
                     }
 )
 
@@ -67,6 +69,20 @@ public class Tema {
 
     @Column(name = "modulo_id", insertable = false, updatable = false)
     private Long moduloId;
+
+//    @ManyToMany(mappedBy = "followedTemas")
+//    @ManyToMany(fetch = FetchType.LAZY)
+//        @JsonIgnore
+//        @JoinTable(
+//                name = "users_tema",
+//                joinColumns = @JoinColumn(
+//                        name = "tema_id", referencedColumnName = "id"
+//                ),
+//                inverseJoinColumns = @JoinColumn(
+//                        name = "user_id", referencedColumnName = "id"
+//                )
+//        )
+//    private Set<User> followers = new HashSet<>();
 
 //    public Tema(Long id, String description, boolean isPinned, String title, Long cursoId, Long moduloId) {
 //        this.id = id;

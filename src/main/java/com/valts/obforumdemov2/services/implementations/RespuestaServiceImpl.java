@@ -6,12 +6,11 @@ import com.valts.obforumdemov2.exceptions.IncorrectUserException;
 import com.valts.obforumdemov2.models.Pregunta;
 import com.valts.obforumdemov2.models.Respuesta;
 import com.valts.obforumdemov2.models.User;
-import com.valts.obforumdemov2.repositories.PreguntaRespository;
+import com.valts.obforumdemov2.repositories.PreguntaRepository;
 import com.valts.obforumdemov2.repositories.RespuestaRepository;
 import com.valts.obforumdemov2.repositories.UserRepository;
 import com.valts.obforumdemov2.services.RespuestaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,7 +24,7 @@ public class RespuestaServiceImpl implements RespuestaService {
     RespuestaRepository respuestaRepository;
 
     @Autowired
-    PreguntaRespository preguntaRespository;
+    PreguntaRepository preguntaRespository;
 
     @Autowired
     UserRepository userRepository;

@@ -1,15 +1,14 @@
 package com.valts.obforumdemov2.services.implementations;
 
 import com.valts.obforumdemov2.dto.TemaDTO;
-import com.valts.obforumdemov2.models.Curso;
-import com.valts.obforumdemov2.models.Modulo;
-import com.valts.obforumdemov2.models.Tema;
-import com.valts.obforumdemov2.repositories.CursoRepository;
-import com.valts.obforumdemov2.repositories.ModuloRepository;
-import com.valts.obforumdemov2.repositories.TemaRepository;
+import com.valts.obforumdemov2.exceptions.AlreadyFollowingException;
+import com.valts.obforumdemov2.exceptions.EntryNotFoundException;
+import com.valts.obforumdemov2.models.*;
+import com.valts.obforumdemov2.repositories.*;
 import com.valts.obforumdemov2.services.TemaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +24,12 @@ public class TemaServiceImpl implements TemaService {
 
     @Autowired
     ModuloRepository moduloRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    FollowerTemaRepository followerTemaRepository;
 
     /**
      * Finds and returns all temas(themes) filtered by curso ID(course ID) where user is enrolled in
@@ -141,5 +146,26 @@ public class TemaServiceImpl implements TemaService {
         }
         temaRepository.deleteById(id);
         return true;
+    }
+
+    public void followTema(Long userId, Long temaId) {
+        Optional<FollowerTema> followerTemaOptional = followerTemaRepository.findByUserIdAndTemaId(userId, temaId);
+        if (followerTemaOptional.isPresent()) throw new AlreadyFollowingException("User already following theme " + temaId);
+
+        Optional<Tema> temaOptional = temaRepository.findById(temaId);
+        if(temaOptional.isEmpty()) throw new EntryNotFoundException("Tema not found");
+
+        FollowerTema followerTema = new FollowerTema();
+        followerTema.setTema(temaOptional.get());
+        followerTema.setUser(userRepository.getById(userId));
+
+        followerTemaRepository.save(followerTema);
+    }
+
+    public void unfollowTema(Long userId, Long temaId) {
+        Optional<FollowerTema> followerTemaOptional = followerTemaRepository.findByUserIdAndTemaId(userId, temaId);
+        if (followerTemaOptional.isPresent()) throw new AlreadyFollowingException("User already following theme " + temaId);
+
+        followerTemaRepository.deleteById(temaId);
     }
 }

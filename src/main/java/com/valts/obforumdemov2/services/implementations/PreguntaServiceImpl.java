@@ -2,12 +2,12 @@ package com.valts.obforumdemov2.services.implementations;
 
 import com.valts.obforumdemov2.dto.PreguntaDTO;
 import com.valts.obforumdemov2.dto.PreguntaUserVoteDTO;
+import com.valts.obforumdemov2.exceptions.AlreadyFollowingException;
 import com.valts.obforumdemov2.exceptions.EntryNotFoundException;
 import com.valts.obforumdemov2.exceptions.IncorrectUserException;
-import com.valts.obforumdemov2.models.Pregunta;
-import com.valts.obforumdemov2.models.Tema;
-import com.valts.obforumdemov2.models.User;
-import com.valts.obforumdemov2.repositories.PreguntaRespository;
+import com.valts.obforumdemov2.models.*;
+import com.valts.obforumdemov2.repositories.FollowerPreguntaRepository;
+import com.valts.obforumdemov2.repositories.PreguntaRepository;
 import com.valts.obforumdemov2.repositories.TemaRepository;
 import com.valts.obforumdemov2.repositories.UserRepository;
 import com.valts.obforumdemov2.services.PreguntaService;
@@ -22,13 +22,16 @@ import java.util.Optional;
 public class PreguntaServiceImpl implements PreguntaService {
 
     @Autowired
-    PreguntaRespository preguntaRespository;
+    PreguntaRepository preguntaRespository;
 
     @Autowired
     TemaRepository temaRepository;
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    FollowerPreguntaRepository followerPreguntaRepository;
 
 //    List<Pregunta> preguntas = preguntaService.findByTemaId(temaId);
     //finds preguntas filtered by tema id
@@ -92,5 +95,26 @@ public class PreguntaServiceImpl implements PreguntaService {
 
         preguntaRespository.deleteById(id);
         return true;
+    }
+
+    public void followPregunta(Long userId, Long preguntaId) {
+        Optional<FollowerPregunta> followerPreguntaOptional = followerPreguntaRepository.findByUserIdAndPreguntaId(userId, preguntaId);
+        if (followerPreguntaOptional.isPresent()) throw new AlreadyFollowingException("User already following pregunta " + preguntaId);
+
+        Optional<Pregunta> preguntaOptional = preguntaRespository.findById(preguntaId);
+        if(preguntaOptional.isEmpty()) throw new EntryNotFoundException("Pregunta not found");
+
+        FollowerPregunta followerPregunta = new FollowerPregunta();
+        followerPregunta.setPregunta(preguntaOptional.get());
+        followerPregunta.setUser(userRepository.getById(userId));
+
+        followerPreguntaRepository.save(followerPregunta);
+    }
+
+    public void unfollowPregunta(Long userId, Long preguntaId) {
+        Optional<FollowerPregunta> followerPreguntaOptional = followerPreguntaRepository.findByUserIdAndPreguntaId(userId, preguntaId);
+        if (followerPreguntaOptional.isPresent()) throw new AlreadyFollowingException("User already following pregunta " + preguntaId);
+
+        followerPreguntaRepository.deleteById(preguntaId);
     }
 }

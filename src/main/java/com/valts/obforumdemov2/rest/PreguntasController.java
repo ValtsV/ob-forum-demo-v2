@@ -67,4 +67,18 @@ public class PreguntasController {
 
 //        return ResponseEntity.notFound().build();
     }
+
+    @PostMapping("/foro/preguntas/{preguntaId}/followers")
+    private ResponseEntity<Void> followPregunta(@PathVariable Long preguntaId, Authentication authentication) {
+        User userDetails = (User) authentication.getPrincipal();
+        preguntaService.followPregunta(userDetails.getId(), preguntaId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/foro/preguntas/{preguntaId}/followers")
+    private ResponseEntity<Void> unfollowPregunta(@PathVariable Long preguntaId, Authentication authentication) {
+        User userDetails = (User) authentication.getPrincipal();
+        preguntaService.unfollowPregunta(userDetails.getId(), preguntaId);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -50,6 +50,33 @@ public class User implements CustomUserDetails {
                     name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @JoinTable(
+            name = "users_preguntas",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "pregunta_id", referencedColumnName = "id"
+            )
+    )
+    private Set<Pregunta> followedPreguntas = new HashSet<>();
+
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JsonIgnore
+//    @JoinTable(
+//            name = "users_tema",
+//            joinColumns = @JoinColumn(
+//                    name = "user_id", referencedColumnName = "id"
+//            ),
+//            inverseJoinColumns = @JoinColumn(
+//                    name = "tema_id", referencedColumnName = "id"
+//            )
+//    )
+//    @ManyToMany(mappedBy = "followers")
+//    private Set<Tema> followedTemas = new HashSet<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();

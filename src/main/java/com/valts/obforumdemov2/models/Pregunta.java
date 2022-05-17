@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -46,4 +48,7 @@ public class Pregunta {
     @OneToMany(mappedBy = "pregunta", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<VotoPregunta> votos;
+
+    @ManyToMany(mappedBy = "followedPreguntas")
+    private Set<User> followers = new HashSet<>();
 }

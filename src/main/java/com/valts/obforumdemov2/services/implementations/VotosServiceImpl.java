@@ -1,7 +1,7 @@
 package com.valts.obforumdemov2.services.implementations;
 
 import com.valts.obforumdemov2.models.*;
-import com.valts.obforumdemov2.repositories.PreguntaRespository;
+import com.valts.obforumdemov2.repositories.PreguntaRepository;
 import com.valts.obforumdemov2.repositories.RespuestaRepository;
 import com.valts.obforumdemov2.repositories.UserRepository;
 import com.valts.obforumdemov2.repositories.VotoRepository;
@@ -18,7 +18,7 @@ public class VotosServiceImpl implements VotoService {
     VotoRepository votoRepository;
 
     @Autowired
-    PreguntaRespository preguntaRespository;
+    PreguntaRepository preguntaRespository;
 
     @Autowired
     RespuestaRepository respuestaRepository;

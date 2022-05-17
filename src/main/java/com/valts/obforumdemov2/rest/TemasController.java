@@ -80,4 +80,18 @@ public class TemasController {
         return ResponseEntity.badRequest().build();
     }
 
+
+    @PostMapping("/foro/temas/{temaId}/followers")
+    private ResponseEntity<Void> followTema(@PathVariable Long temaId, Authentication authentication) {
+        User userDetails = (User) authentication.getPrincipal();
+        temaService.followTema(userDetails.getId(), temaId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/foro/temas/{temaId}/followers")
+    private ResponseEntity<Void> unfollowTema(@PathVariable Long temaId, Authentication authentication) {
+        User userDetails = (User) authentication.getPrincipal();
+        temaService.unfollowTema(userDetails.getId(), temaId);
+        return ResponseEntity.ok().build();
+    }
 }

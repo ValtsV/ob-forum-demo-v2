@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TemaRepository extends JpaRepository<Tema, Long> {
@@ -16,4 +17,7 @@ public interface TemaRepository extends JpaRepository<Tema, Long> {
 
     @Query(name = "findAllByCursoIdAndModuloIdUserAccessible", nativeQuery = true)
     List<TemaDTO> findAllByCursoIdAndModuloIdUserAccessible(Long cursoId, Long moduloId, Long userId);
+
+//    @Query(value = "select t from Tema t left join fetch t.followers where t.id = :temaId")
+//    Optional<Tema> findByIdWithFollowers(Long temaId);
 }
