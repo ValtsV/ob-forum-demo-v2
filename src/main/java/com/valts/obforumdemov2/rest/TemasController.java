@@ -38,6 +38,7 @@ public class TemasController {
         return ResponseEntity.ok(temas);
     }
 
+    @CrossOrigin(origins = "http://localhost:4200/", maxAge = 3600)
     @GetMapping("/foro/temas/{id}")
     private ResponseEntity<Tema> getTemaById(@PathVariable Long id) {
         Tema tema = temaService.findById(id);

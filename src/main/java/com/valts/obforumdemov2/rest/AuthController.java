@@ -8,15 +8,18 @@ import com.valts.obforumdemov2.security.JwtUtil;
 import com.valts.obforumdemov2.services.implementations.RegistrationServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -47,17 +50,20 @@ public class AuthController {
         return ResponseEntity.ok(successMessage);
     }
 
+//    @CrossOrigin(origins = "http://localhost:4200/", maxAge = 3600)
     @PostMapping("/foro/auth/login")
-    public ResponseEntity<String> login(@RequestBody UserAuthDTO userAuthDTO) {
+    public ResponseEntity<Void> login(@RequestBody UserAuthDTO userAuthDTO) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userAuthDTO.getEmail(), userAuthDTO.getPassword())
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String jwt = jwtUtil.generateJwtToken(authentication);
+        User userDetails = (User) authentication.getPrincipal();
 
-        return ResponseEntity.ok(jwt);
+        ResponseCookie jwtCookie = jwtUtil.generateJwtCookie(userDetails);
+
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).build();
     }
 
 }

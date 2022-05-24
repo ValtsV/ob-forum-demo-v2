@@ -1,12 +1,17 @@
 package com.valts.obforumdemov2.security;
 
+import com.valts.obforumdemov2.models.User;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.WebUtils;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Component
@@ -21,20 +26,32 @@ public class JwtUtil {
     @Value("${app.jwt.expiration-ms}")
     private int jwtExpirationMs;
 
-    public String generateJwtToken(Authentication authentication) {
+    public ResponseCookie generateJwtCookie(User userDetails) {
+        String jwt = generateTokenFromEmail(userDetails.getEmail());
+        ResponseCookie cookie = ResponseCookie.from("accessToken", jwt).path("/").maxAge(24 * 60 * 60).httpOnly(true).build();
+        return cookie;
+    }
 
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        return Jwts.builder()
-                .setSubject((userDetails.getEmail()))
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                .compact();
+    public String getJwtFromCookies(HttpServletRequest request) {
+        Cookie cookie = WebUtils.getCookie(request, "accessToken");
+        if (cookie != null) {
+            return cookie.getValue();
+        } else {
+            return null;
+        }
     }
 
     public String getEmailFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public String generateTokenFromEmail(String email) {
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
     }
 
     public boolean validateJwtToken(String authToken) {
