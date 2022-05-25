@@ -2,6 +2,7 @@ package com.valts.obforumdemov2.rest;
 
 import com.valts.obforumdemov2.dto.RegistrationDTO;
 import com.valts.obforumdemov2.dto.UserAuthDTO;
+import com.valts.obforumdemov2.dto.UserDTO;
 import com.valts.obforumdemov2.models.User;
 import com.valts.obforumdemov2.repositories.UserRepository;
 import com.valts.obforumdemov2.security.JwtUtil;
@@ -52,7 +53,7 @@ public class AuthController {
 
 //    @CrossOrigin(origins = "http://localhost:4200/", maxAge = 3600)
     @PostMapping("/foro/auth/login")
-    public ResponseEntity<Void> login(@RequestBody UserAuthDTO userAuthDTO) {
+    public ResponseEntity<UserDTO> login(@RequestBody UserAuthDTO userAuthDTO) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userAuthDTO.getEmail(), userAuthDTO.getPassword())
         );
@@ -63,7 +64,9 @@ public class AuthController {
 
         ResponseCookie jwtCookie = jwtUtil.generateJwtCookie(userDetails);
 
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).build();
+        UserDTO userDto = new UserDTO(userDetails.getId(), userDetails.getAvatar(), userDetails.getUsername());
+
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(userDto);
     }
 
 }
