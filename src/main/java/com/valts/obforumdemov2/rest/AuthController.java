@@ -1,11 +1,12 @@
 package com.valts.obforumdemov2.rest;
 
-import com.valts.obforumdemov2.dto.RegistrationDTO;
-import com.valts.obforumdemov2.dto.UserAuthDTO;
-import com.valts.obforumdemov2.dto.UserDTO;
+import com.valts.obforumdemov2.dto.*;
+import com.valts.obforumdemov2.exceptions.TokenRefreshException;
+import com.valts.obforumdemov2.models.RefreshToken;
 import com.valts.obforumdemov2.models.User;
 import com.valts.obforumdemov2.repositories.UserRepository;
 import com.valts.obforumdemov2.security.JwtUtil;
+import com.valts.obforumdemov2.services.implementations.RefreshTokenService;
 import com.valts.obforumdemov2.services.implementations.RegistrationServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +20,20 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @RestController
+    @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
 public class AuthController {
 
     @Autowired
     private RegistrationServiceImpl registrationService;
+
+    @Autowired
+    private RefreshTokenService refreshTokenService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -51,22 +56,40 @@ public class AuthController {
         return ResponseEntity.ok(successMessage);
     }
 
-//    @CrossOrigin(origins = "http://localhost:4200/", maxAge = 3600)
     @PostMapping("/foro/auth/login")
-    public ResponseEntity<UserDTO> login(@RequestBody UserAuthDTO userAuthDTO) {
+    public ResponseEntity<?> login(@RequestBody UserAuthDTO userAuthDTO) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userAuthDTO.getEmail(), userAuthDTO.getPassword())
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        ResponseCookie jwtCookie = jwtUtil.generateJwtCookie((User) authentication.getPrincipal());
+
         User userDetails = (User) authentication.getPrincipal();
 
-        ResponseCookie jwtCookie = jwtUtil.generateJwtCookie(userDetails);
+        List<String> roles = userDetails.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList());
 
-        UserDTO userDto = new UserDTO(userDetails.getId(), userDetails.getAvatar(), userDetails.getUsername());
+        ResponseCookie refreshCookie = refreshTokenService.createRefreshToken(userDetails.getId());
 
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(userDto);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+                .body(jwtCookie);
+    }
+
+    @GetMapping("foro/auth/refreshtoken")
+    public ResponseEntity<?> refreshtoken(@CookieValue(name = "refreshToken") String refreshToken) {
+        return refreshTokenService.findByToken(refreshToken)
+                .map(refreshTokenService::verifyExpiration)
+                .map(RefreshToken::getUser)
+                .map(user -> {
+                    ResponseCookie jwtCookie = jwtUtil.generateJwtCookie(user);
+                    return ResponseEntity.ok()
+                            .header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(true);
+                })
+                .orElseThrow(() -> new TokenRefreshException(refreshToken,
+                        "Refresh token is not in database!"));
     }
 
 }

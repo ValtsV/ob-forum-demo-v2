@@ -168,4 +168,10 @@ public class TemaServiceImpl implements TemaService {
 
         followerTemaRepository.deleteById(temaId);
     }
+
+    public TemaDTO findTemaWithPreguntaCountByTemaId(Long temaId) {
+        TemaDTO tema = temaRepository.findTemaWithPreguntaCountByTemaId(temaId);
+        System.out.println(tema.getId());
+        return tema;
+    }
 }

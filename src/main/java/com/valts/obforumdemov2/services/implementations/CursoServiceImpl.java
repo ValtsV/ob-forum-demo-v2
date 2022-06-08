@@ -2,16 +2,14 @@ package com.valts.obforumdemov2.services.implementations;
 
 import com.valts.obforumdemov2.exceptions.AlreadyFollowingException;
 import com.valts.obforumdemov2.exceptions.EntryNotFoundException;
-import com.valts.obforumdemov2.models.Curso;
-import com.valts.obforumdemov2.models.FollowerCurso;
-import com.valts.obforumdemov2.models.FollowerTema;
-import com.valts.obforumdemov2.models.Tema;
+import com.valts.obforumdemov2.models.*;
 import com.valts.obforumdemov2.repositories.CursoRepository;
 import com.valts.obforumdemov2.repositories.FollowerCursoRepository;
 import com.valts.obforumdemov2.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,6 +23,14 @@ public class CursoServiceImpl {
 
     @Autowired
     UserRepository userRepository;
+
+    public List<Curso> getCursos(User user) {
+        return cursoRepository.findAllByUser_Id(user.getId());
+    }
+
+    public Curso getCursoById(Long userId, Long cursoId) {
+        return cursoRepository.findAllByUser_IdAndCursoId(userId, cursoId);
+    }
 
     public void followCurso(Long userId, Long cursoId) {
         Optional<FollowerCurso> followerCursoOptional = followerCursoRepository.findByUserIdAndCursoId(userId, cursoId);

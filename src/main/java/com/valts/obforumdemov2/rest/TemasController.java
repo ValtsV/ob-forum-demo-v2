@@ -14,6 +14,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
 public class TemasController {
 
     private final TemaServiceImpl temaService;
@@ -38,10 +39,10 @@ public class TemasController {
         return ResponseEntity.ok(temas);
     }
 
-    @CrossOrigin(origins = "http://localhost:4200/", maxAge = 3600)
     @GetMapping("/foro/temas/{id}")
-    private ResponseEntity<Tema> getTemaById(@PathVariable Long id) {
-        Tema tema = temaService.findById(id);
+    private ResponseEntity<TemaDTO> getTemaById(@PathVariable Long id, Authentication authentication) {
+//        TODO: change query so you can use temadto
+        TemaDTO tema = temaService.findTemaWithPreguntaCountByTemaId(id);
 
         return ResponseEntity.ok(tema);
     }

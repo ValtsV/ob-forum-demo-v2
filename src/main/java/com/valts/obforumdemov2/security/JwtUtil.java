@@ -28,9 +28,10 @@ public class JwtUtil {
 
     public ResponseCookie generateJwtCookie(User userDetails) {
         String jwt = generateTokenFromEmail(userDetails.getEmail());
-        ResponseCookie cookie = ResponseCookie.from("accessToken", jwt).path("/").maxAge(24 * 60 * 60).httpOnly(true).build();
+        ResponseCookie cookie = ResponseCookie.from("accessToken", jwt).path("/").sameSite("None").secure(true).maxAge(24 * 60 * 60).httpOnly(true).build();
         return cookie;
     }
+
 
     public String getJwtFromCookies(HttpServletRequest request) {
         Cookie cookie = WebUtils.getCookie(request, "accessToken");

@@ -1,5 +1,6 @@
 package com.valts.obforumdemov2.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,5 +19,6 @@ import javax.persistence.ManyToOne;
 public class VotoRespuesta extends Voto {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "respuesta_id")
+    @JsonIgnore
     private Respuesta respuesta;
 }

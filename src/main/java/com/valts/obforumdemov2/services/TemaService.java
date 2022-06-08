@@ -2,6 +2,7 @@ package com.valts.obforumdemov2.services;
 
 import com.valts.obforumdemov2.dto.TemaDTO;
 import com.valts.obforumdemov2.models.Tema;
+import com.valts.obforumdemov2.models.User;
 
 import java.util.List;
 

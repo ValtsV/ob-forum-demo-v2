@@ -18,6 +18,9 @@ public interface TemaRepository extends JpaRepository<Tema, Long> {
     @Query(name = "findAllByCursoIdAndModuloIdUserAccessible", nativeQuery = true)
     List<TemaDTO> findAllByCursoIdAndModuloIdUserAccessible(Long cursoId, Long moduloId, Long userId);
 
+    @Query(value = "select new com.valts.obforumdemov2.dto.TemaDTO(t.id, t.description, t.isPinned, t.title, t.cursoId, t.moduloId, count(p) as preguntasCount) from Tema t left join Pregunta p on p.tema.id = t.id where t.id = :temaId group by t.id")
+    TemaDTO findTemaWithPreguntaCountByTemaId(Long temaId);
+
 //    @Query(value = "select t from Tema t left join fetch t.followers where t.id = :temaId")
 //    Optional<Tema> findByIdWithFollowers(Long temaId);
 }

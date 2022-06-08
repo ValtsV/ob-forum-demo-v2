@@ -2,9 +2,7 @@ package com.valts.obforumdemov2.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.valts.obforumdemov2.security.CustomUserDetails;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -13,7 +11,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -49,6 +48,18 @@ public class User implements CustomUserDetails {
             inverseJoinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles;
+
+//    @OneToMany(cascade = CascadeType.ALL,
+//            orphanRemoval = true,
+//            fetch = FetchType.EAGER)
+//    @JsonIgnore
+////    @JoinTable(
+////            name = "users_roles",
+////            joinColumns = @JoinColumn(
+////                    name = "user_id", referencedColumnName = "id"),
+////            inverseJoinColumns = @JoinColumn(
+////                    name = "role_id", referencedColumnName = "id"))
+//    private Set<Role> roles;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JsonIgnore

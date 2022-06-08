@@ -15,6 +15,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
 public class PreguntasController {
 
     private final PreguntaServiceImpl preguntaService;

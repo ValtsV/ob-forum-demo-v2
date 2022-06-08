@@ -425,3 +425,14 @@ FROM generate_series(1,400) as t(id);
 INSERT INTO votos (user_id, vote, respuesta_id, dtype)
 SELECT floor(random()*4+2), random() > 0.2, t.id, 'VotoRespuesta'
 FROM generate_series(1,400) as t(id);
+
+insert into roles(id, name) values (1, 'USER');
+insert into roles(id, name) values (2, 'ADMIN');
+
+INSERT INTO users_roles (user_id, role_id)
+VALUES (1,2);
+
+INSERT INTO users_roles (user_id, role_id)
+SELECT t.id, 1
+from generate_series(1,17) as t(id);
+
