@@ -72,10 +72,12 @@ public class AuthController {
 
         ResponseCookie refreshCookie = refreshTokenService.createRefreshToken(userDetails.getId());
 
+        LoginResponse loginResponse = new LoginResponse(userDetails.getId(), userDetails.getAvatar(), userDetails.getUsername(), roles);
+
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
-                .body(jwtCookie);
+                .body(loginResponse);
     }
 
     @GetMapping("foro/auth/refreshtoken")

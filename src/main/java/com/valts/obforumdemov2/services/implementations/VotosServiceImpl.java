@@ -1,5 +1,6 @@
 package com.valts.obforumdemov2.services.implementations;
 
+import com.valts.obforumdemov2.dto.VotoDTO;
 import com.valts.obforumdemov2.models.*;
 import com.valts.obforumdemov2.repositories.PreguntaRepository;
 import com.valts.obforumdemov2.repositories.RespuestaRepository;
@@ -30,7 +31,6 @@ public class VotosServiceImpl implements VotoService {
 //    boolean isVoted = votosService.save(userId, vote, respuestaId, "respuesta");
 //    saves vote with respuesta or pregunta id depending on which parameter is passed
     public List<VotoRespuesta> saveRespuesta(Long userId, Voto vote, Long voteTypeId) {
-// TODO: delete vote if user votes for opposite
 
             Optional<Respuesta> respuestaOptional = respuestaRepository.findById(voteTypeId);
             if (respuestaOptional.isEmpty()) {
@@ -59,7 +59,9 @@ public class VotosServiceImpl implements VotoService {
     public List<VotoPregunta> savePregunta(Long userId, Voto vote, Long voteTypeId) {
 
         Optional<Pregunta> preguntaOptional = preguntaRespository.findById(voteTypeId);
-        if (preguntaOptional.isEmpty()) return votoRepository.findAllByPregunta_Id(voteTypeId);
+        if (preguntaOptional.isEmpty()) {
+            return votoRepository.findAllByPregunta_Id(voteTypeId);
+        }
 
         Optional<VotoPregunta> votoPreguntaOptional = votoRepository.findByPreguntaIdAndUserIdAndVote(voteTypeId, userId, vote.isVote());
         if (votoPreguntaOptional.isPresent()) {
@@ -76,8 +78,8 @@ public class VotosServiceImpl implements VotoService {
         votoPregunta.setPregunta(preguntaOptional.get());
         votoPregunta.setUser(userRepository.getById(userId));
         votoRepository.save(votoPregunta);
-        return votoRepository.findAllByPregunta_Id(voteTypeId);
 
+        return votoRepository.findAllByPregunta_Id(voteTypeId);
     }
 
 //    boolean isVoted = votosService.update(userId, respuestaId, "respuesta")

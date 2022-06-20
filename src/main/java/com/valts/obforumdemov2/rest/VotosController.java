@@ -1,5 +1,6 @@
 package com.valts.obforumdemov2.rest;
 
+import com.valts.obforumdemov2.dto.VotoDTO;
 import com.valts.obforumdemov2.models.User;
 import com.valts.obforumdemov2.models.Voto;
 import com.valts.obforumdemov2.models.VotoPregunta;
@@ -35,6 +36,7 @@ public class VotosController {
         User userDetails = (User) authentication.getPrincipal();
 
         List<VotoPregunta> votos = votosService.savePregunta(userDetails.getId(), vote, preguntaId);
+//        VotoDTO votos = votosService.savePregunta(userDetails.getId(), vote, preguntaId);
 //        if (result.equalsIgnoreCase("Vote saved")) return ResponseEntity.ok().build();
 //        if (result.equalsIgnoreCase("Vote not saved")) return ResponseEntity.notFound().build();
 //        if (result.equalsIgnoreCase("Vote deleted")) return ResponseEntity.noContent().build();

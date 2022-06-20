@@ -14,7 +14,7 @@ public class PreguntaUserVoteDTO{
     private Long totalNegativeVotes;
     private Long totalRespuestas;
     private UserDTO user;
-    private Boolean userVote;
+    private Boolean userVote; // will be null if user hasn't voted
 
     public PreguntaUserVoteDTO(Long id, LocalDateTime updatedAt, String description, boolean isPinned, String title, Long totalPositiveVotes, Long totalNegativeVotes, Long totalRespuestas, Long userId, String avatar, String username, Boolean userVote) {
         this.id = id;

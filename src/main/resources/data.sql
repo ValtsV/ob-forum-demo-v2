@@ -1,13 +1,13 @@
 -- CURSOS
-INSERT INTO cursos (avatar, name) VALUES (null, 'React JS');
-INSERT INTO cursos (avatar, name) VALUES (null, 'Angular');
-INSERT INTO cursos (avatar, name) VALUES (null, 'Spring');
-INSERT INTO cursos (avatar, name) VALUES (null, 'Java Script');
-INSERT INTO cursos (avatar, name) VALUES (null, 'Git');
-INSERT INTO cursos (avatar, name) VALUES (null, 'Azure');
-INSERT INTO cursos (avatar, name) VALUES (null, 'Hibernate');
-INSERT INTO cursos (avatar, name) VALUES (null, 'AWS');
-INSERT INTO cursos (avatar, name) VALUES (null, 'C#');
+INSERT INTO cursos (avatar, name) VALUES ('react.png', 'React JS');
+INSERT INTO cursos (avatar, name) VALUES ('angular.png', 'Angular');
+INSERT INTO cursos (avatar, name) VALUES ('spring.png', 'Spring');
+INSERT INTO cursos (avatar, name) VALUES ('javascript.png', 'Java Script');
+INSERT INTO cursos (avatar, name) VALUES ('git.png', 'Git');
+INSERT INTO cursos (avatar, name) VALUES ('azure.png', 'Azure');
+INSERT INTO cursos (avatar, name) VALUES ('hibernate.png', 'Hibernate');
+INSERT INTO cursos (avatar, name) VALUES ('aws.png', 'AWS');
+INSERT INTO cursos (avatar, name) VALUES ('csharp.png', 'C#');
 
 -- MODULOS
 --react
@@ -347,7 +347,7 @@ SELECT date (timestamp '2022-01-01' +
                random() * (timestamp '2022-03-01' - timestamp '2022-02-01'))
         + time '10:00:00'
         + random() * INTERVAL '8 hours', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-false, 'Lorem ipsum dolor sit amet', t.id, floor(random()*16+2)
+true, 'Lorem ipsum dolor sit amet', t.id, floor(random()*16+2)
 FROM generate_series(1,117) as t(id);
 -- 4
 INSERT INTO preguntas (updated_at, description, is_pinned, title, tema_id, user_id)
