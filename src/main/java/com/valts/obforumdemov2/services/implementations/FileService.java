@@ -1,5 +1,10 @@
 package com.valts.obforumdemov2.services.implementations;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.PutObjectResult;
 import com.sun.tools.jconsole.JConsoleContext;
 import com.valts.obforumdemov2.bucket.BucketName;
 import com.valts.obforumdemov2.filestore.FileStore;
@@ -30,6 +35,9 @@ public class FileService {
     @Autowired
     FileStore fileStore;
 
+    @Autowired
+    AmazonS3 s3;
+
     public void uploadUserProfileImage(Long userId, MultipartFile file) {
         // 1. Check if image is not empty
         isFileEmpty(file);
@@ -39,49 +47,29 @@ public class FileService {
         // 3. The user exists in our database
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException(String.format("User profile %s not found", userId)));
 
-        // 4. Grab some metadata from file if any
-        Map<String, String> metadata = extractMetadata(file);
+        // 4. Set correct Content Type
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(file.getContentType());
 
-        // 5. Store the image in s3 and update database (user -> avatar) with s3 image link
-        String path = String.format("%s/%s", BucketName.PROFILE_IMAGE.getBucketName(), user.getId());
-        String newFileName = String.format("%s-%s", file.getOriginalFilename(), UUID.randomUUID());
-
+        // 5. Save the image in s3
+        String newFileName = String.format("%s/%s-%s", user.getId(), UUID.randomUUID(), file.getOriginalFilename());
         try {
-            fileStore.save(path, newFileName, user.getAvatar(), Optional.of(metadata), file.getInputStream());
-            user.setAvatar(newFileName);
+            PutObjectRequest request = new PutObjectRequest(BucketName.PROFILE_IMAGE.getBucketName(), newFileName, file.getInputStream(), metadata);
+            fileStore.save(request);
+
+            // 6. Delete old image in s3
+            String[] srcParts = user.getAvatar().split("/");
+            DeleteObjectRequest deleteRequest = new DeleteObjectRequest(BucketName.PROFILE_IMAGE.getBucketName(), String.format("%s/%s", srcParts[srcParts.length - 2], srcParts[srcParts.length - 1]));
+            fileStore.delete(deleteRequest);
+            String imgsrc = "https://" + BucketName.PROFILE_IMAGE.getBucketName() + ".s3." + s3.getRegionName() + ".amazonaws.com/" + newFileName;
+
+            // 7. Update user avatar
+            user.setAvatar(imgsrc);
             userRepository.save(user);
+
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
-
-    }
-
-    public byte[] downloadUserProfileImage(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException(String.format("User profile %s not found", userId)));
-
-        String path = String.format("%s/%s",
-                BucketName.PROFILE_IMAGE.getBucketName(),
-                user.getId());
-
-        return fileStore.download(path, user.getAvatar());
-
-    }
-
-    public byte[] downloadCursoProfileImage(Long cursoId) {
-        Curso curso = cursoRepository.findById(cursoId).orElseThrow(() -> new IllegalStateException(String.format("Curso with id %s not found", cursoId)));
-
-        String path = String.format("%s",
-                BucketName.PROFILE_IMAGE.getBucketName());
-
-        return fileStore.download(path, curso.getAvatar());
-
-    }
-
-    private Map<String, String> extractMetadata(MultipartFile file) {
-        Map<String, String> metadata = new HashMap<>();
-        metadata.put("Content-Type", file.getContentType());
-        metadata.put("Content-Length", String.valueOf(file.getSize()));
-        return metadata;
     }
 
     private void isImage(MultipartFile file) {
