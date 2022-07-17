@@ -15,7 +15,7 @@ public interface PreguntaService {
 
     Pregunta save(Pregunta pregunta, Long userId);
 
-    Pregunta update(Pregunta pregunta, User user) throws IncorrectUserException;
+    Pregunta update(Pregunta pregunta, User user, boolean isAdmin) throws IncorrectUserException;
 
     boolean deleteOne(Long id, User user);
 }

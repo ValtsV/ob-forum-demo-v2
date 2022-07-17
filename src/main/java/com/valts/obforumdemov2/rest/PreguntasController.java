@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @AllArgsConstructor
@@ -50,10 +51,11 @@ public class PreguntasController {
     }
 
     @PutMapping("/foro/preguntas")
-    private ResponseEntity<Pregunta> updatePregunta(@RequestBody Pregunta pregunta, Authentication authentication) throws IncorrectUserException {
+    private ResponseEntity<Pregunta> updatePregunta(@RequestBody Pregunta pregunta, Authentication authentication, HttpServletRequest request) throws IncorrectUserException {
         if (pregunta.getId() == null) return ResponseEntity.badRequest().build();
 
-        Pregunta updatedPregunta = preguntaService.update(pregunta, (User) authentication.getPrincipal());
+        boolean isAdmin = authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        Pregunta updatedPregunta = preguntaService.update(pregunta, (User) authentication.getPrincipal(), isAdmin);
         if (updatedPregunta != null) return ResponseEntity.ok(updatedPregunta);
 
         return ResponseEntity.notFound().build();

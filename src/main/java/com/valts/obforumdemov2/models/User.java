@@ -21,7 +21,7 @@ public class User implements CustomUserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String avatar;
+    private String avatar = "https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/defaultprofileimg.png";
     private String email;
     private boolean enabled = true;
     private boolean locked = false;
@@ -49,18 +49,6 @@ public class User implements CustomUserDetails {
                     name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles;
 
-//    @OneToMany(cascade = CascadeType.ALL,
-//            orphanRemoval = true,
-//            fetch = FetchType.EAGER)
-//    @JsonIgnore
-////    @JoinTable(
-////            name = "users_roles",
-////            joinColumns = @JoinColumn(
-////                    name = "user_id", referencedColumnName = "id"),
-////            inverseJoinColumns = @JoinColumn(
-////                    name = "role_id", referencedColumnName = "id"))
-//    private Set<Role> roles;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinTable(
@@ -73,20 +61,6 @@ public class User implements CustomUserDetails {
             )
     )
     private Set<Pregunta> followedPreguntas = new HashSet<>();
-
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JsonIgnore
-//    @JoinTable(
-//            name = "users_tema",
-//            joinColumns = @JoinColumn(
-//                    name = "user_id", referencedColumnName = "id"
-//            ),
-//            inverseJoinColumns = @JoinColumn(
-//                    name = "tema_id", referencedColumnName = "id"
-//            )
-//    )
-//    @ManyToMany(mappedBy = "followers")
-//    private Set<Tema> followedTemas = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

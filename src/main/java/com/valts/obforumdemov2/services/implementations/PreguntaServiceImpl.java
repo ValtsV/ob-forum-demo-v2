@@ -11,6 +11,7 @@ import com.valts.obforumdemov2.repositories.PreguntaRepository;
 import com.valts.obforumdemov2.repositories.TemaRepository;
 import com.valts.obforumdemov2.repositories.UserRepository;
 import com.valts.obforumdemov2.services.PreguntaService;
+import org.hibernate.jpa.spi.ParameterRegistration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,13 +64,13 @@ public class PreguntaServiceImpl implements PreguntaService {
 
 //     Pregunta updatedPregunta = preguntaService.update(pregunta);
 //    updates pregunta
-    public Pregunta update(Pregunta pregunta, User currentUser) throws IncorrectUserException {
+    public Pregunta update(Pregunta pregunta, User currentUser, boolean isAdmin) throws IncorrectUserException {
         Optional<Pregunta> preguntaOptional = preguntaRespository.findById(pregunta.getId());
         if(preguntaOptional.isEmpty()) return null;
 
 
         Pregunta preguntaToUpdate = preguntaOptional.get();
-        if (preguntaToUpdate.getUser().getId() != currentUser.getId() && !(currentUser.getRoles().contains("ADMIN"))) {
+        if (preguntaToUpdate.getUser().getId() != currentUser.getId() && !isAdmin) {
             throw new IncorrectUserException("Not your post, buddy!");
         }
 
@@ -77,7 +78,7 @@ public class PreguntaServiceImpl implements PreguntaService {
         preguntaToUpdate.setDescription(pregunta.getDescription());
 
         preguntaToUpdate.setPinned(pregunta.isPinned());
-        preguntaToUpdate.setUpdatedAt(LocalDateTime.now());
+//        preguntaToUpdate.setUpdatedAt(LocalDateTime.now());
 
         return preguntaRespository.save(preguntaToUpdate);
     }

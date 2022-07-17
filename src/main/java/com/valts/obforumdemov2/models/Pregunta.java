@@ -49,5 +49,6 @@ public class Pregunta {
     private List<VotoPregunta> votos;
 
     @ManyToMany(mappedBy = "followedPreguntas")
+    @JsonIgnore
     private Set<User> followers = new HashSet<>();
 }

@@ -1,13 +1,13 @@
 -- CURSOS
-INSERT INTO cursos (avatar, name) VALUES ('react.png', 'React JS');
-INSERT INTO cursos (avatar, name) VALUES ('angular.png', 'Angular');
-INSERT INTO cursos (avatar, name) VALUES ('spring.png', 'Spring');
-INSERT INTO cursos (avatar, name) VALUES ('javascript.png', 'Java Script');
-INSERT INTO cursos (avatar, name) VALUES ('git.png', 'Git');
-INSERT INTO cursos (avatar, name) VALUES ('azure.png', 'Azure');
-INSERT INTO cursos (avatar, name) VALUES ('hibernate.png', 'Hibernate');
-INSERT INTO cursos (avatar, name) VALUES ('aws.png', 'AWS');
-INSERT INTO cursos (avatar, name) VALUES ('csharp.png', 'C#');
+INSERT INTO cursos (avatar, name) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/react.png', 'React JS');
+INSERT INTO cursos (avatar, name) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/angular.png', 'Angular');
+INSERT INTO cursos (avatar, name) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/spring.png', 'Spring');
+INSERT INTO cursos (avatar, name) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/javascript.png', 'Java Script');
+INSERT INTO cursos (avatar, name) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/git.png', 'Git');
+INSERT INTO cursos (avatar, name) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/azure.png', 'Azure');
+INSERT INTO cursos (avatar, name) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/hibernate.png', 'Hibernate');
+INSERT INTO cursos (avatar, name) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/aws.png', 'AWS');
+INSERT INTO cursos (avatar, name) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/csharp.png', 'C#');
 
 -- MODULOS
 --react
@@ -214,23 +214,23 @@ INSERT INTO temas (description, is_pinned, title, curso_id, modulo_id) VALUES ('
 
 -- users (psw - $2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe - password)
 
-INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES (null, 'mail1@admin.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'admin');
-INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES (null, 'mail2@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'John');
-INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES (null, 'mail3@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Alex');
-INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES (null, 'mail4@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Richard');
-INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES (null, 'mail5@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Julia');
-INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES (null, 'mail6@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Sam');
-INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES (null, 'mail7@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Nix');
-INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES (null, 'mail8@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Karl');
-INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES (null, 'mail9@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Hailey');
-INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES (null, 'mail10@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Shawn');
-INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES (null, 'mail11@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Brook');
-INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES (null, 'mail12@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Ryan');
-INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES (null, 'mail13@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Johnny');
-INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES (null, 'mail14@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Tim');
-INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES (null, 'mail15@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Paul');
-INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES (null, 'mail16@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Tiffany');
-INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES (null, 'mail17@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Spencer');
+INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/defaultprofileimg.png', 'mail1@admin.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'admin');
+INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/defaultprofileimg.png', 'mail2@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'John');
+INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/defaultprofileimg.png', 'mail3@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Alex');
+INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/defaultprofileimg.png', 'mail4@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Richard');
+INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/defaultprofileimg.png', 'mail5@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Julia');
+INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/defaultprofileimg.png', 'mail6@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Sam');
+INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/defaultprofileimg.png', 'mail7@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Nix');
+INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/defaultprofileimg.png', 'mail8@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Karl');
+INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/defaultprofileimg.png', 'mail9@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Hailey');
+INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/defaultprofileimg.png', 'mail10@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Shawn');
+INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/defaultprofileimg.png', 'mail11@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Brook');
+INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/defaultprofileimg.png', 'mail12@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Ryan');
+INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/defaultprofileimg.png', 'mail13@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Johnny');
+INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/defaultprofileimg.png', 'mail14@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Tim');
+INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/defaultprofileimg.png', 'mail15@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Paul');
+INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/defaultprofileimg.png', 'mail16@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Tiffany');
+INSERT INTO users (avatar, email, enabled, locked, password, username) VALUES ('https://ob-forum-demo-image-upload.s3.eu-west-3.amazonaws.com/defaultprofileimg.png', 'mail17@mail.com', true, false, '$2a$10$ZA8t39OjPaDsUCsRNEnaAOvuQg5cGUvdq2GkDGRgPsf9ycvoj2kYe', 'Spencer');
 
 -- enroll users
 INSERT INTO cursos_users (user_id, curso_id) VALUES (1, 1);

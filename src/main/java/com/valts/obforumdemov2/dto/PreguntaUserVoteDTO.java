@@ -1,6 +1,8 @@
 package com.valts.obforumdemov2.dto;
 
 import lombok.Data;
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 
 @Data

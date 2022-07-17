@@ -94,4 +94,13 @@ public class AuthController {
                         "Refresh token is not in database!"));
     }
 
+    @GetMapping("foro/users/{userId}")
+    public ResponseEntity<LoginResponse> refreshUser(@PathVariable long userId, Authentication authentication) {
+        User userDetails = (User) authentication.getPrincipal();
+        List<String> roles = userDetails.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList());
+        LoginResponse loginResponse = new LoginResponse(userDetails.getId(), userDetails.getAvatar(), userDetails.getUsername(), roles);
+
+        return ResponseEntity.ok(loginResponse);
+    }
+
 }

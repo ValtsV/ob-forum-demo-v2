@@ -11,7 +11,7 @@ public interface RespuestaService {
 
     List<RespuestaDTO> save(Respuesta respuesta, Long userId);
 
-    List<RespuestaDTO> update(Respuesta respuesta, User user);
+    List<RespuestaDTO> update(Respuesta respuesta, User user, boolean isAdmin);
 
     List<RespuestaDTO> deleteOne(Long preguntaId, User user);
 

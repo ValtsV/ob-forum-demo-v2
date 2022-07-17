@@ -5,6 +5,7 @@ import com.valts.obforumdemov2.services.implementations.FileService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,8 +24,9 @@ public class FileController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public void uploadUserProfileImage(@RequestParam("file") MultipartFile file, Authentication authentication) throws IOException {
+    public ResponseEntity uploadUserProfileImage(@RequestParam("file") MultipartFile file, Authentication authentication) throws IOException {
         User userDetails = (User) authentication.getPrincipal();
         fileService.uploadUserProfileImage(userDetails.getId(), file);
+        return ResponseEntity.ok().build();
     }
 }

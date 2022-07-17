@@ -45,7 +45,8 @@ public class RespuestasController {
     private ResponseEntity<List<RespuestaDTO>> updateRespuesta(@RequestBody Respuesta respuesta, Authentication authentication) {
         if (respuesta.getId() == null) return ResponseEntity.badRequest().build();
 
-        List<RespuestaDTO> respuestas = respuestaService.update(respuesta, (User) authentication.getPrincipal());
+        boolean isAdmin = authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        List<RespuestaDTO> respuestas = respuestaService.update(respuesta, (User) authentication.getPrincipal(), isAdmin);
         if (respuestas == null) return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(respuestas);

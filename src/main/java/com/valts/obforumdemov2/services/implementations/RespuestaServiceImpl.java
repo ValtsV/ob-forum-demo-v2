@@ -53,17 +53,29 @@ public class RespuestaServiceImpl implements RespuestaService {
 
 //    private ResponseEntity<PreguntaRespuestasDTO> updateRespuesta(@RequestBody Respuesta respuesta)
 //    updates respuesta, returns pregunta with all respuestas
-    public List<RespuestaDTO> update(Respuesta respuesta, User currentUser) {
+    public List<RespuestaDTO> update(Respuesta respuesta, User currentUser, boolean isAdmin) {
         Optional<Respuesta> respuestaOptional = respuestaRepository.findById(respuesta.getId());
         if (respuestaOptional.isEmpty()) throw new EntryNotFoundException("Answer not found");
 
         Respuesta respuestaToUpdate = respuestaOptional.get();
-        if (respuestaToUpdate.getUser().getId() != currentUser.getId() && !(currentUser.getRoles().contains("ADMIN"))) {
-            throw new IncorrectUserException("Not your answer, buddy!");
+        Pregunta pregunta = preguntaRespository.findById(respuesta.getPreguntaId()).get();
+        if (pregunta.getUser().getId() == currentUser.getId() || isAdmin) {
+            respuestaToUpdate.setPinned(respuesta.isPinned());
+            if (respuestaToUpdate.getUser().getId() == currentUser.getId() || isAdmin) {
+                respuestaToUpdate.setAnswer(respuesta.getAnswer());
+//                respuestaToUpdate.setUpdatedAt(LocalDateTime.now());
+            }
+            respuestaRepository.save(respuestaToUpdate);
+            return respuestaRepository.findRespuestasByPreguntaId(respuestaToUpdate.getPreguntaId(), respuesta.getUser().getId());
+
+        }
+
+
+        if (respuestaToUpdate.getUser().getId() != currentUser.getId() && !isAdmin) {
+           throw new IncorrectUserException("Not your answer, buddy!");
         }
         respuestaToUpdate.setAnswer(respuesta.getAnswer());
-        respuestaToUpdate.setPinned(respuesta.isPinned());
-        respuestaToUpdate.setUpdatedAt(LocalDateTime.now());
+//        respuestaToUpdate.setUpdatedAt(LocalDateTime.now());
         respuestaRepository.save(respuestaToUpdate);
 
         return respuestaRepository.findRespuestasByPreguntaId(respuestaToUpdate.getPreguntaId(), respuesta.getUser().getId());
