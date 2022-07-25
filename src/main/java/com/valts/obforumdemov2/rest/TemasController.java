@@ -41,7 +41,7 @@ public class TemasController {
 
     @GetMapping("/foro/temas/{id}")
     private ResponseEntity<TemaDTO> getTemaById(@PathVariable Long id, Authentication authentication) {
-//        TODO: change query so you can use temadto
+//        TODO: change query so you can use temadto / what???
         TemaDTO tema = temaService.findTemaWithPreguntaCountByTemaId(id);
 
         return ResponseEntity.ok(tema);
@@ -95,5 +95,13 @@ public class TemasController {
         User userDetails = (User) authentication.getPrincipal();
         temaService.unfollowTema(userDetails.getId(), temaId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/foro/temas/{temaId}/followers")
+    private ResponseEntity<Boolean> checkFollowStatus(@PathVariable Long temaId, Authentication authentication) {
+        User userDetails = (User) authentication.getPrincipal();
+
+        Boolean isFollowing = temaService.checkFollowStatus(temaId, userDetails.getId());
+        return ResponseEntity.ok(isFollowing);
     }
 }

@@ -40,22 +40,22 @@ public class PreguntasController {
     }
 
     @PostMapping("/foro/preguntas")
-    private ResponseEntity<Pregunta> addPregunta(@RequestBody Pregunta pregunta, Authentication authentication) {
+    private ResponseEntity<PreguntaUserVoteDTO> addPregunta(@RequestBody Pregunta pregunta, Authentication authentication) {
         if(pregunta.getTemaId() == null) return ResponseEntity.badRequest().build();
 
         User userDetails = (User) authentication.getPrincipal();
-        Pregunta savedPregunta = preguntaService.save(pregunta, userDetails.getId());
+        PreguntaUserVoteDTO savedPregunta = preguntaService.save(pregunta, userDetails.getId());
         if (savedPregunta == null) return ResponseEntity.badRequest().build();
 
         return ResponseEntity.ok(savedPregunta);
     }
 
     @PutMapping("/foro/preguntas")
-    private ResponseEntity<Pregunta> updatePregunta(@RequestBody Pregunta pregunta, Authentication authentication, HttpServletRequest request) throws IncorrectUserException {
+    private ResponseEntity<PreguntaUserVoteDTO> updatePregunta(@RequestBody Pregunta pregunta, Authentication authentication, HttpServletRequest request) throws IncorrectUserException {
         if (pregunta.getId() == null) return ResponseEntity.badRequest().build();
 
         boolean isAdmin = authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-        Pregunta updatedPregunta = preguntaService.update(pregunta, (User) authentication.getPrincipal(), isAdmin);
+        PreguntaUserVoteDTO updatedPregunta = preguntaService.update(pregunta, (User) authentication.getPrincipal(), isAdmin);
         if (updatedPregunta != null) return ResponseEntity.ok(updatedPregunta);
 
         return ResponseEntity.notFound().build();
@@ -83,5 +83,13 @@ public class PreguntasController {
         User userDetails = (User) authentication.getPrincipal();
         preguntaService.unfollowPregunta(userDetails.getId(), preguntaId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/foro/preguntas/{preguntaId}/followers")
+    private ResponseEntity<Boolean> checkFollowStatus(@PathVariable Long preguntaId, Authentication authentication) {
+        User userDetails = (User) authentication.getPrincipal();
+
+        Boolean isFollowing = preguntaService.checkFollowStatus(preguntaId, userDetails.getId());
+        return ResponseEntity.ok(isFollowing);
     }
 }

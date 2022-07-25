@@ -164,9 +164,16 @@ public class TemaServiceImpl implements TemaService {
 
     public void unfollowTema(Long userId, Long temaId) {
         Optional<FollowerTema> followerTemaOptional = followerTemaRepository.findByUserIdAndTemaId(userId, temaId);
-        if (followerTemaOptional.isPresent()) throw new AlreadyFollowingException("User already following theme " + temaId);
+        // TODO: Change exception
+        if (followerTemaOptional.isEmpty()) throw new AlreadyFollowingException("User is not following theme " + temaId);
 
-        followerTemaRepository.deleteById(temaId);
+        followerTemaRepository.deleteById(followerTemaOptional.get().getId());
+    }
+
+    public Boolean checkFollowStatus(Long temaId, Long userId) {
+        Optional<FollowerTema> followerTemaOptional = followerTemaRepository.findByUserIdAndTemaId(userId, temaId);
+        if (followerTemaOptional.isPresent()) return true;
+        return false;
     }
 
     public TemaDTO findTemaWithPreguntaCountByTemaId(Long temaId) {

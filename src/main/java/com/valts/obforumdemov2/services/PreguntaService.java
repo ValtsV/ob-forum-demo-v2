@@ -13,9 +13,9 @@ public interface PreguntaService {
 
     PreguntaUserVoteDTO findById(Long id, Long userId);
 
-    Pregunta save(Pregunta pregunta, Long userId);
+    PreguntaUserVoteDTO save(Pregunta pregunta, Long userId);
 
-    Pregunta update(Pregunta pregunta, User user, boolean isAdmin) throws IncorrectUserException;
+    PreguntaUserVoteDTO update(Pregunta pregunta, User user, boolean isAdmin) throws IncorrectUserException;
 
     boolean deleteOne(Long id, User user);
 }

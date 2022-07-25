@@ -11,7 +11,6 @@ import com.valts.obforumdemov2.repositories.PreguntaRepository;
 import com.valts.obforumdemov2.repositories.TemaRepository;
 import com.valts.obforumdemov2.repositories.UserRepository;
 import com.valts.obforumdemov2.services.PreguntaService;
-import org.hibernate.jpa.spi.ParameterRegistration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ import java.util.Optional;
 public class PreguntaServiceImpl implements PreguntaService {
 
     @Autowired
-    PreguntaRepository preguntaRespository;
+    PreguntaRepository preguntaRepository;
 
     @Autowired
     TemaRepository temaRepository;
@@ -37,13 +36,13 @@ public class PreguntaServiceImpl implements PreguntaService {
 //    List<Pregunta> preguntas = preguntaService.findByTemaId(temaId);
     //finds preguntas filtered by tema id
     public List<PreguntaDTO> findByTemaId(Long id) {
-        return preguntaRespository.findAllByTemaId(id);
+        return preguntaRepository.findAllByTemaId(id);
     }
 
 //    PreguntaDTO pregunta = preguntaService.findById(id)
 //    finds pregunta by its id
     public PreguntaUserVoteDTO findById(Long preguntaId, Long userId) {
-        Optional<PreguntaUserVoteDTO> preguntaDTOOptional = preguntaRespository.findPreguntaById(preguntaId, userId);
+        Optional<PreguntaUserVoteDTO> preguntaDTOOptional = preguntaRepository.findPreguntaById(preguntaId, userId);
 
         if (preguntaDTOOptional.isEmpty()) return null;
 
@@ -52,20 +51,21 @@ public class PreguntaServiceImpl implements PreguntaService {
 
 //     Pregunta pregunta = preguntaService.save(pregunta);
 //    saves pregunta in db
-    public Pregunta save(Pregunta pregunta, Long userId) {
+    public PreguntaUserVoteDTO save(Pregunta pregunta, Long userId) {
         Optional<Tema> temaOptional = temaRepository.findById(pregunta.getTemaId());
         if (temaOptional.isEmpty()) return null;
 
         pregunta.setTema(temaOptional.get());
         pregunta.setUser(userRepository.getById(userId));
         pregunta.setUpdatedAt(LocalDateTime.now());
-        return preguntaRespository.save(pregunta);
+        Pregunta savedPregunta = preguntaRepository.save(pregunta);
+        return preguntaRepository.findPreguntaById(savedPregunta.getId(), userId).get();
     }
 
 //     Pregunta updatedPregunta = preguntaService.update(pregunta);
 //    updates pregunta
-    public Pregunta update(Pregunta pregunta, User currentUser, boolean isAdmin) throws IncorrectUserException {
-        Optional<Pregunta> preguntaOptional = preguntaRespository.findById(pregunta.getId());
+    public PreguntaUserVoteDTO update(Pregunta pregunta, User currentUser, boolean isAdmin) throws IncorrectUserException {
+        Optional<Pregunta> preguntaOptional = preguntaRepository.findById(pregunta.getId());
         if(preguntaOptional.isEmpty()) return null;
 
 
@@ -80,13 +80,14 @@ public class PreguntaServiceImpl implements PreguntaService {
         preguntaToUpdate.setPinned(pregunta.isPinned());
 //        preguntaToUpdate.setUpdatedAt(LocalDateTime.now());
 
-        return preguntaRespository.save(preguntaToUpdate);
+        preguntaRepository.save(preguntaToUpdate);
+        return preguntaRepository.findPreguntaById(pregunta.getId(), currentUser.getId()).get();
     }
 
 //      boolean isDeleted = preguntaService.deleteOne(id);
 //    deletes pregunta
     public boolean deleteOne(Long id, User currentUser) {
-        Optional<Pregunta> preguntaOptional = preguntaRespository.findById(id);
+        Optional<Pregunta> preguntaOptional = preguntaRepository.findById(id);
         if(preguntaOptional.isEmpty()) throw new EntryNotFoundException("Question with this Id not found");
 
         Pregunta pregunta = preguntaOptional.get();
@@ -94,7 +95,7 @@ public class PreguntaServiceImpl implements PreguntaService {
             throw new IncorrectUserException("Not your post, buddy!");
         }
 
-        preguntaRespository.deleteById(id);
+        preguntaRepository.deleteById(id);
         return true;
     }
 
@@ -102,7 +103,7 @@ public class PreguntaServiceImpl implements PreguntaService {
         Optional<FollowerPregunta> followerPreguntaOptional = followerPreguntaRepository.findByUserIdAndPreguntaId(userId, preguntaId);
         if (followerPreguntaOptional.isPresent()) throw new AlreadyFollowingException("User already following pregunta " + preguntaId);
 
-        Optional<Pregunta> preguntaOptional = preguntaRespository.findById(preguntaId);
+        Optional<Pregunta> preguntaOptional = preguntaRepository.findById(preguntaId);
         if(preguntaOptional.isEmpty()) throw new EntryNotFoundException("Pregunta not found");
 
         FollowerPregunta followerPregunta = new FollowerPregunta();
@@ -114,8 +115,15 @@ public class PreguntaServiceImpl implements PreguntaService {
 
     public void unfollowPregunta(Long userId, Long preguntaId) {
         Optional<FollowerPregunta> followerPreguntaOptional = followerPreguntaRepository.findByUserIdAndPreguntaId(userId, preguntaId);
-        if (followerPreguntaOptional.isPresent()) throw new AlreadyFollowingException("User already following pregunta " + preguntaId);
+        // TODO: change exception
+        if (followerPreguntaOptional.isEmpty()) throw new AlreadyFollowingException("User is not following pregunta " + preguntaId);
 
-        followerPreguntaRepository.deleteById(preguntaId);
+        followerPreguntaRepository.deleteById(followerPreguntaOptional.get().getId());
+    }
+
+    public Boolean checkFollowStatus(Long temaId, Long userId) {
+        Optional<FollowerPregunta> followerPreguntaOptional = followerPreguntaRepository.findByUserIdAndPreguntaId(userId, temaId);
+        if (followerPreguntaOptional.isPresent()) return true;
+        return false;
     }
 }
